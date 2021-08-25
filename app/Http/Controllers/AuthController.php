@@ -47,10 +47,10 @@ class AuthController extends Controller
             if($return) {
                 return [
                     'message' => ['error' => 'could_not_create_token'],
-                    'code' => 500
+                    'code' => 400
                 ];
             }
-            return response()->json(['error' => 'could_not_create_token'], 500);
+            return response()->json(['error' => 'could_not_create_token'], 400);
         }
         if($return) {
             return [
@@ -97,7 +97,12 @@ class AuthController extends Controller
         }
         $user->password = Hash::make(rand(500000, 6966632555));
         $user->save();
-        $this->sendSMSNotification($user->phone, $digitCode);
+
+        try {
+            $this->sendSMSNotification($user->phone, $digitCode);
+        }catch (\Exception $ex) {
+            return response()->json(['message' => 'No find phone number!'], 201);
+        }
 
 //        $token = JWTAuth::fromUser($user);
 //        $user = new UsersResource($user);

@@ -33,7 +33,12 @@ Route::group(['middleware' => ['admin']], function() {
     Route::resource('/users', 'UsersController');
     Route::post('/categories/removeFile/{id}', 'CategoriesController@removeFile');
     Route::resource('/categories', 'CategoriesController');
+
+    Route::get('/subcategories/edit/{category}', 'SubcategoriesController@editNew')->name('subcategory.edit.new');
+    Route::get('/subcategories/get/ability', 'SubcategoriesController@getAbility');
+    Route::post('/subcategories/edit/{id}', 'SubcategoriesController@update')->name('subcategory.edit.update');
     Route::resource('/subcategories', 'SubcategoriesController');
+
     Route::resource('/areas', 'AreasController');
     Route::resource('/cities', 'CitiesController');
     Route::post('/quizzes/update/{id}', 'QuizzesController@update')->name('quizzes.new.update');
@@ -57,6 +62,7 @@ Route::group(['middleware' => ['admin']], function() {
     Route::post('/quiz-materials/create', 'QuizMaterialsController@create')->name('quiz.materials.store');
     Route::get('/quiz-materials/{material}', 'QuizMaterialsController@edit')->name('quiz.materials.edit');
     Route::post('/quiz-materials/{material}', 'QuizMaterialsController@edit')->name('quiz.materials.update');
+    Route::get('/quiz-materials/delete/{material}', 'QuizMaterialsController@delete')->name('quiz.materials.delete');
 });
 
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {

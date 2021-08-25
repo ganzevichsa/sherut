@@ -65,7 +65,8 @@
                                     <form action="{{ route('subcategories.destroy', $subcategory->id) }}" method="POST">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <a class="btn btn-gray" onclick="createRow('#subCategoryModal','{{ route('subcategories.store') }}', '#subcategoriesList', true, 'subcategories', '{{$subcategory->id}}', 'category_id', '{{ $category->value }}')">לַעֲרוֹך</a>
+                                        <!-- <a class="btn btn-gray" onclick="createRow('#subCategoryModal','{{ route('subcategories.store') }}', '#subcategoriesList', true, 'subcategories', '{{$subcategory->id}}', 'category_id', '{{ $category->value }}')">לַעֲרוֹך</a> -->
+                                        <a href="{{ route('subcategory.edit.new', $subcategory) }}" class="btn btn-gray">לַעֲרוֹך</a>
                                         <button class="btn btn-danger">לִמְחוֹק</button>
                                     </form>
                                 </td>

@@ -50,4 +50,10 @@ class QuizMaterialsController extends Controller
         $subcategories = Subcategory::all();
     	return view('quiz-materials.edit-add', compact('material', 'categories', 'subcategories'));
     }
+
+    public function delete (QuizMaterials $material)
+    {
+        $material->delete();
+        return redirect()->back();
+    }
 }

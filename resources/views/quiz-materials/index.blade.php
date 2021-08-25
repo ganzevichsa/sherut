@@ -17,6 +17,7 @@
                 <thead>
                 <tr>
                     <th>Title</th>
+                    <th>Sub-Category</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -24,13 +25,10 @@
                 @foreach($materials as $material)
                     <tr>
                         <td>{{ $material->title }}</td>
+                        <td>{{ \App\Subcategory::find($material->cat)->name??'' }}</td>
                         <td>
-                            <form action="{{ route('posts.destroy', $material->id) }}" method="POST">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <a class="btn btn-gray" href="{{ route('quiz.materials.edit',$material) }}">לַעֲרוֹך</a>
-                                <button class="btn btn-danger">לִמְחוֹק</button>
-                            </form>
+                            <a class="btn btn-gray" href="{{ route('quiz.materials.edit',$material) }}">לַעֲרוֹך</a>
+                            <a class="btn btn-danger" href="{{ route('quiz.materials.delete', $material->id) }}">לִמְחוֹק</a>
                         </td>
                     </tr>
                 @endforeach

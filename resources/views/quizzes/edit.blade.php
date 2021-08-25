@@ -54,7 +54,7 @@
                                     <label class="control-label">Materials 1: </label>
                                     <select name="material[one][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_1) OR array_search($material->title, $ans_1) === 0) selected @endif>{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_1) OR array_search($material->title, $ans_1) === 0) selected @endif>{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -79,7 +79,7 @@
                                     <label class="control-label">Materials 2: </label>
                                     <select name="material[two][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_2) OR array_search($material->title, $ans_2) === 0) selected @endif>{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_2) OR array_search($material->title, $ans_2) === 0) selected @endif>{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -104,7 +104,7 @@
                                     <label class="control-label">Materials 3: </label>
                                     <select name="material[three][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_3) OR array_search($material->title, $ans_3) === 0) selected @endif>{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_3) OR array_search($material->title, $ans_3) === 0) selected @endif>{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -129,7 +129,7 @@
                                     <label class="control-label">Materials 4: </label>
                                     <select name="material[four][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_4) OR array_search($material->title, $ans_4) === 0) selected @endif>{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}" @if(array_search($material->title, $ans_4) OR array_search($material->title, $ans_4) === 0) selected @endif>{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>

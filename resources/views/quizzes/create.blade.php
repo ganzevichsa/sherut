@@ -41,7 +41,7 @@
                                     <label class="control-label">Materials 1: </label>
                                     <select name="material[one][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}">{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}">{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,7 +59,7 @@
                                     <label class="control-label">Materials 2: </label>
                                     <select name="material[two][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}">{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}">{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -77,7 +77,7 @@
                                     <label class="control-label">Materials 3: </label>
                                     <select name="material[three][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}">{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}">{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -95,7 +95,7 @@
                                     <label class="control-label">Materials 4: </label>
                                     <select name="material[four][]" multiple="multiple" class="form-control">
                                         @foreach($materials as $material)
-                                            <option value="{{ $material->title }}">{{ $material->title }}</option>
+                                            <option value="{{ $material->title }}">{{ $material->title }}-{{ \App\Subcategory::find($material->cat)->name??'' }}</option>
                                         @endforeach
                                     </select>
                                 </div>

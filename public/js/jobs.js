@@ -23,6 +23,7 @@ $(document).ready(function(){
                 }
             },
             error: function(data) {
+                console.log(data);
                 let message = '';
                 $.each(data.responseJSON.errors,function(key,value){
                     message += value;

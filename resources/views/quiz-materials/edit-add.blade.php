@@ -24,7 +24,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label>Sub Category</label>
                         <div class="col-sm-12">
                             <select id="cat" class="js-single form-control" name="cat">
@@ -48,7 +48,7 @@
                         <div class="col-sm-12">
                             <input type="text" class="form-control" name="point" value="{{ $material->point??'' }}">
                         </div>
-                    </div>
+                    </div> -->
                     
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">שמירה</button>
