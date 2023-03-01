@@ -4,21 +4,19 @@
 	"clients": [],
 	"database": "redis",
 	"databaseConfig": {
-		"redis": {
-			"keyPrefix":"laravel_database_"
-		},
+		"redis": {},
 		"sqlite": {
 			"databasePath": "/database/laravel-echo-server.sqlite"
 		}
 	},
-	"devMode": true,
+	"devMode": false,
 	"host": null,
 	"port": "6001",
 	"protocol": "https",
 	"socketio": {},
 	"secureOptions": 67108864,
-	"sslCertPath": "/etc/letsencrypt/live/sherutbekalut.co.il/fullchain.pem",
-	"sslKeyPath": "/etc/letsencrypt/live/sherutbekalut.co.il/privkey.pem",
+	"sslCertPath": "../../../etc/letsencrypt/live/api.sherutbekalut.co.il/fullchain.pem",
+	"sslKeyPath": "../../../etc/letsencrypt/live/api.sherutbekalut.co.il/privkey.pem",
 	"sslCertChainPath": "",
 	"sslPassphrase": "",
 	"subscribers": {
@@ -26,9 +24,9 @@
 		"redis": true
 	},
 	"apiOriginAllow": {
-		"allowCors": false,
-		"allowOrigin": "",
-		"allowMethods": "",
-		"allowHeaders": ""
+		"allowCors": true,
+		"allowOrigin": "http://localhost:80",
+		"allowMethods": "GET, POST",
+		"allowHeaders": "Origin, Content-Type, X-Auth-Token, X-Requested-With, Accept, Authorization, X-CSRF-TOKEN, X-Socket-Id"
 	}
 }

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use App\Role;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\School;
 
 class UsersResource extends JsonResource
 {
@@ -43,8 +44,11 @@ class UsersResource extends JsonResource
             'is_before_school' => $this->role_id == Role::USER_BEFORE_SCHOOL || $this->role_id == Role::USER_BEFORE_SCHOOL_SECOND ? true : false,
             'is_midrashot' => $this->role_id == Role::USER_BEFORE_SCHOOL_SECOND ? true : false,
             'is_hr' => $this->role_id == Role::HR ? true : false,
+            'auth_start' => $this->auth_start,
             'created_at' => (new \DateTime($this->created_at))->format('Y-m-d\TH:i'),
             'updated_at' => (new \DateTime($this->updated_at))->format('Y-m-d\TH:i'),
+            'school' => $this->school_id ? School::find($this->school_id) : null,
+
         ];
     }
 }

@@ -16,7 +16,8 @@ class SimpleTableResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'title' => $this->title,
         ];
     }
 }

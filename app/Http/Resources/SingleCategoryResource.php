@@ -28,6 +28,8 @@ class SingleCategoryResource extends JsonResource
             'priority' => $this->priority,
             'min_value' => $this->min_value,
             'text' => $this->text,
+            'title' => $this->title,
+
         ];
     }
 }

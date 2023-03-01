@@ -40,7 +40,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Answer 1: </label>
-                                    <textarea class="form-control" name="answer[one]">{{ $data[0]->answer_one->text }}</textarea>
+                                    <textarea class="form-control" name="answer[one]">{{ $data[0]->answer_one->text??'' }}</textarea>
                                 </div>
 
                                 @php
@@ -65,14 +65,17 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Answer 2: </label>
-                                    <textarea class="form-control" name="answer[two]">{{ $data[1]->answer_two->text }}</textarea>
+                                    <textarea class="form-control" name="answer[two]">{{ $data[1]->answer_two->text??'' }}</textarea>
                                 </div>
 
                                 @php
                                     $ans_2 = [];
-                                    foreach($data[1]->answer_two->materials as $data2){
-                                        $ans_2[] = $data2->material;
-                                    }
+
+                                    if(isset($data[1])):
+                                        foreach($data[1]->answer_two->materials as $data2){
+                                            $ans_2[] = $data2->material;
+                                        }
+                                    endif;
                                 @endphp
 
                                 <div class="form-group">
@@ -90,14 +93,17 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Answer 3: </label>
-                                    <textarea class="form-control" name="answer[three]">{{ $data[2]->answer_three->text }}</textarea>
+                                    <textarea class="form-control" name="answer[three]">{{ $data[2]->answer_three->text??'' }}</textarea>
                                 </div>
 
                                 @php
                                     $ans_3 = [];
-                                    foreach($data[2]->answer_three->materials as $data3){
-                                        $ans_3[] = $data3->material;
-                                    }
+
+                                    if(isset($data[2])):
+                                        foreach($data[2]->answer_three->materials as $data3){
+                                            $ans_3[] = $data3->material;
+                                        }
+                                    endif;
                                 @endphp
 
                                 <div class="form-group">
@@ -115,14 +121,17 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label class="control-label">Answer 4: </label>
-                                    <textarea class="form-control" name="answer[four]">{{ $data[3]->answer_four->text }}</textarea>
+                                    <textarea class="form-control" name="answer[four]">{{ $data[3]->answer_four->text??'' }}</textarea>
                                 </div>
 
                                 @php
                                     $ans_4 = [];
-                                    foreach($data[3]->answer_four->materials as $data4){
-                                        $ans_4[] = $data4->material;
-                                    }
+
+                                    if(isset($data[3])):
+                                        foreach($data[3]->answer_four->materials as $data4){
+                                            $ans_4[] = $data4->material;
+                                        }
+                                    endif;
                                 @endphp
 
                                 <div class="form-group">

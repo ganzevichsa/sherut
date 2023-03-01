@@ -8,6 +8,7 @@ use App\Job;
 use App\JobReview;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class JobReviewsController extends Controller
 {
@@ -20,7 +21,9 @@ class JobReviewsController extends Controller
 
     public function index($id)
     {
+
         $job = Job::find($id);
+
         if (!$job) {
             return response()->json(['message' => 'not_found'], 404);
         }
@@ -28,7 +31,7 @@ class JobReviewsController extends Controller
         return [
             'title' => $job->title,
             'cover_image' => $job->images()->count() ? '/storage/jobs/' . $job->images()->first()->file : false,
-            'logo' => $job->organization->logo ? '/storage/organizations/logos/' . $job->organization->logo : false,
+            'logo' => $job->organization ? '/storage/organizations/logos/' . $job->organization->logo : false,
             'stars' => $job->reviews()->count() ? round($job->reviews()->sum('stars') / $job->reviews()->count()) : 0,
             'count' => $reviews->count(),
             'data' => ReviewsResource::collection($reviews)
@@ -39,28 +42,49 @@ class JobReviewsController extends Controller
     {
         $rules = [
             'description' => 'required|min:3',
+            'first_name' => 'required|min:3',
+            'last_name' => 'required|min:3',
+            'phone' => 'required|min:3',
+            'show_info' => 'required',
+            'stars' => 'required',
+            'date' => 'required|min:3',
+            'duration' => 'required',
+
+
         ];
-        $this->validate($request, $rules);
+
+        $data = $request->all();
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 400);
+        }
         if(!Job::find($id)) {
             return response()->json(['message' => 'not_found'],404);
         }
+
         $data = $request->all();
+  
         $review = new JobReview();
         $review->user_id = $this->user->id;
         $review->job_id = $id;
+       
         $review->first_name = $data['first_name'];
         $review->last_name = $data['last_name'];
         $review->phone = $data['phone'];
+    
         $review->show_info = $data['show_info'];
         $review->description = $data['description'];
         $review->stars = $data['stars'];
         $review->date = $data['date'];
         $review->duration = $data['duration'];
-
+        
         if (isset($data['avatar']) && !empty($data['avatar'])) {
             $review->avatar = $this->user->uploadAvatar($data['avatar']);
         }
         $review->save();
+
         return response()->json(['message' => 'success'],200);
     }
 

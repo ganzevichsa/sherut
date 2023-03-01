@@ -19,6 +19,8 @@ class CategoriesResource extends JsonResource
             'name' => $this->name,
             'icon' => 'http://api.sherutbekalut.co.il/storage/categories/icons/'.$this->icon,
             'text' => $this->text,
+            'title' => $this->title,
+
         ];
     }
 }

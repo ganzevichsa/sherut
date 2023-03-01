@@ -17,8 +17,9 @@ class ProfileRequestsResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
+            'id' => $this->job->id,
             'title' => $this->job->title,
+            'organization_id' => $this->job->organization ? $this->job->organization->id : '',
             'organization_name' => $this->job->organization ? $this->job->organization->name : '',
             'logo' => $this->organization ? $this->organization->logo ? '/storage/organizations/logos/'.$this->organization->logo : false : '',
             'status' => $this->status,

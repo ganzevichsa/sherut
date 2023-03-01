@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Http\Controllers\HrController;
 use App\Http\Controllers\HrJobController;
 use App\JobType;
+use App\UserJob;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class OpportunityShowResource extends JsonResource
@@ -39,7 +40,7 @@ class OpportunityShowResource extends JsonResource
                 "פתוח להרשמה"
             ],
             'status' => $this->status,
-            'type' => $this->type->name,
+            'type' => $this->type ? $this->type->name : '',
             'category_id' => $this->category ? $this->category_id : '',
             'subcategory_id' => $this->subcategory ? $this->subcategory_id : '',
             'name' => $this->title,
@@ -48,14 +49,15 @@ class OpportunityShowResource extends JsonResource
             'area' => $this->city ? $this->city->area->name : '',
             'city' => $this->city ? $this->city->name : '',
             'place' => $this->home > 0 ? $places['home'] : ($this->out > 0 ? $places['out'] : ($this->dormitory > 0 ? $places['dormitory'] : '')),
-            'count' => $this->home + $this->dormitory + $this->out,
+            'count_of_all_positions' => $this->count_of_all_positions,
             'nucleus' => $this->nucleus,
             'how_to_sort' => $this->how_to_sort,
             'other_hr_name' => $this->other_hr_name,
             'phone' => $user->phone,
             'email' => $user->email,
             'other_hr_phone' => $this->other_hr_phone,
-            'is_edit' => $is_edit
+            'is_edit' => $is_edit,
+            'count_of_taken_positions' => $this->count_of_taken_positions
         ];
     }
 }

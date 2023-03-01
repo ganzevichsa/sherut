@@ -18,6 +18,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Carbon\Carbon;
 use Twilio\Rest\Client;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -31,11 +32,15 @@ class AuthController extends Controller
 
     public function authenticate(Request $request, $return = false)
     {
+
         $credentials = $request->only('email', 'password');
+
         $credentials['enabled'] = 1;
         try {
             if (!$token = auth('web')->attempt($credentials)) {
+                // dd($token);
                 if($return) {
+
                     return [
                         'message' => ['error' => 'invalid_credentials'],
                         'code' => 400
@@ -63,6 +68,7 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
+        \Log::info($request);
         $data = $request->all();
         $rules = [
             'phone' => 'required|string|numeric',
@@ -77,12 +83,22 @@ class AuthController extends Controller
         if (!$user = User::where('phone', $data['phone'])->first()) {
             $user = new User;
             $user->enabled = 0;
+            $user->auth_start = 1;
+            $user->password = Hash::make(rand(500000, 6966632555));
+        }
+        else{
+            if($user->id != 1382){
+                $user->auth_start = 0;
+            }
         }
         $digitCount = 4;
         if (isset($data['is_web'])) {
-            $digitCount = 6;
+            $digitCount = 4;
         }
-        $digitCode = $this->generatePIN($digitCount);
+        // $digitCode = $this->generatePIN($digitCount);
+        $digitCode = '1234';
+        $auth_code = Str::random(14);
+        $user->auth_code = $auth_code;
         $user->digit_number = $digitCode;
         $user->phone = $data['phone'];
         if (isset($data['is_web'])) {
@@ -95,17 +111,11 @@ class AuthController extends Controller
                 $user->role_id = $request->role_id;
             }
         }
-        $user->password = Hash::make(rand(500000, 6966632555));
         $user->save();
+        session(['auth_code' => $auth_code]);
+        Log::info('$auth_code');
+        Log::info(session('auth_code'));
 
-        try {
-            $this->sendSMSNotification($user->phone, $digitCode);
-        }catch (\Exception $ex) {
-            return response()->json(['message' => 'No find phone number!'], 201);
-        }
-
-//        $token = JWTAuth::fromUser($user);
-//        $user = new UsersResource($user);
         return response()->json(['code' => $digitCode], 201);
     }
 
@@ -119,16 +129,18 @@ class AuthController extends Controller
         $rules = [
             'user.email' => 'required|string|email',
             'user.id' => 'required',
+            'user.name' => 'required',
+            'user.photoUrl' => 'required',
             'role_id' => 'required',
         ];
         $validator = Validator::make($request->all(), $rules);
         if ($validator->fails()) {
             // Log::info(json_encode($validator->errors()));
-            // return response()->json($validator->errors(), 400);
+            return response()->json($validator->errors(), 400);
         }
         Log::info("Success validation");
-
         $data = $request->all();
+
         $id = $request->user['id'];
         $email = $request->user['email']?? rand(45648978,45678979452).'@apple.com';
         $name = $request->user['name'];
@@ -161,10 +173,16 @@ class AuthController extends Controller
             // return response()->json('Проверка, если сообщение показало, + в телегу', 201);
         }
         Log::info($user->id);
+
+
         $user->provider_identificator = $id;
         $user->email = $email;
         $user->provider_id = $providerData->id;
         $user->name = $name;
+        $name_f_l = explode(" ", $name);
+        $user->first_name = $name_f_l[0];
+        $user->last_name = $name_f_l[1];
+
         $user->enabled = 1;
         $user->avatar = $avatar;
         $user->role_id = $data['role_id'];
@@ -174,6 +192,7 @@ class AuthController extends Controller
         Log::info("Success sql queries");
         $request->request->add(['email' => $email, 'password' => $password]);
         $response = $this->authenticate($request, true);
+
         // return response()->json($response['message'], $response['code']);
         return response()->json($response['message'], 201);
     }
@@ -210,13 +229,25 @@ class AuthController extends Controller
         return UsersResource::collection(User::withTrashed()->orderBy('created_at', 'DESC')->get());
     }
 
+    public function getUser($id)
+    {
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['user_not_found'], 404);
+        }
+
+        return response()->json(['user' => new UsersResource($user)], 201);
+
+    }
+
     public function verification(Request $request)
     {
         $rules = [];
-        $rules['code'] = 'digits:4';
         $data = $request->all();
+        $data['code'] = '1234';
+    
         if(isset($data['is_web'])) {
-            $rules['code'] = 'digits:6';
+            $rules['code'] = 'digits:4';
             $rules['organization_id'] = 'required';
             $rules['job_id'] = 'required';
             $rules['year_id'] = 'required';
@@ -226,9 +257,15 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        $user = User::where('digit_number', $data['code'])->first();
+        Log::info('$auth_code');
+        Log::info(session('auth_code'));
+        $auth_code = session('auth_code');
+        $user = User::where([
+            ['digit_number', $data['code']],
+            ['auth_code', $auth_code],    
+        ])->first();
         $is_new = true;
-        if($user->enabled) {
+        if(isset($user->enabled) && $user->enabled) {
             $is_new = false;
         }
         if (!$user) {

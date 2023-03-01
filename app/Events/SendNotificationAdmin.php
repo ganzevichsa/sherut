@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use App\Http\Resources\SendNotificationResource;
 
 use App\Models\Notification;
 
@@ -36,5 +37,17 @@ class SendNotificationAdmin implements ShouldBroadcast
     public function broadcastOn()
     {
         return new Channel('notification');
+    }
+
+    public function broadcastAs()
+    {
+        return 'send';
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            new SendNotificationResource($this->notification)
+        ];
     }
 }

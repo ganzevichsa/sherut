@@ -20,6 +20,11 @@ class BlogsResourc extends JsonResource
             'category' => $this->category->name .", ".$this->subcategory->name,
             'date' => $this->date,
             'description' => $this->description,
+            'author' => $this->author,
+            'subtitle' => $this->subtitle,
+            'organization' => $this->organization,
+            'organisation_logo' => $this->organisation_logo,
+
             'image' => '/storage/blogs/'.$this->image,
         ];
     }

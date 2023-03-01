@@ -32,7 +32,7 @@ class OpportunityEditMidrashaResource extends JsonResource
             'description' => $this->description,
             'images' => $images,
             'video_url' => $this->video_url,
-            'count' => $this->home + $this->dormitory + $this->out,
+            'count_of_all_positions' => $this->count_of_all_positions,
             'other_hr_name' => $this->other_hr_name ? $this->other_hr_name : '',
             'other_hr_phone' => $this->other_hr_phone ? $this->other_hr_phone : '',
         ];

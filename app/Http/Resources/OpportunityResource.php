@@ -28,7 +28,7 @@ class OpportunityResource extends JsonResource
             'status' => $this->status,
             "date" => new Carbon($this->created_at),
             'count_of_all_positions' => $this->count_of_all_positions,
-            'count_of_taken_positions' => $this->jobUsers()->where('status',UserJob::APPROVED)->count(),
+            'count_of_taken_positions' => $this->count_of_taken_positions,
             'description' => $this->description
         ];
     }

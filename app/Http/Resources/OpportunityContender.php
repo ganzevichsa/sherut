@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\UserJob;
+
 class OpportunityContender extends JsonResource
 {
     /**
@@ -25,7 +27,7 @@ class OpportunityContender extends JsonResource
             'city' => 'אין רישום',
             'birthdate' => $this->user->birthdate,
             'email' => $this->user->email,
-            'status' => $this->status,
+            'status' => $this->status == UserJob::APPLY ? 'העברה לרשימת המתנה' : ($this->status == UserJob::APPROVED ? 'התקבלה' : ($this->status == UserJob::CANCEL ? 'העברה לרשימת המתנה' : '')),
             'statuses' => [
                 'העברה לרשימת המתנה',
                 'התקבלה',

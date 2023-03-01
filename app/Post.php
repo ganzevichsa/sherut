@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
+
+    
     public function favorites()
     {
         return $this->belongsToMany('App\User', 'favorite_posts', 'post_id');

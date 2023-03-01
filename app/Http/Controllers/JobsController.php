@@ -18,6 +18,7 @@ use App\StageOfEducation;
 use App\TypeOfYear;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
 
 class JobsController extends Controller
 {
@@ -99,6 +100,8 @@ class JobsController extends Controller
             if (!$job) {
                 $job = new Job();
             } else {
+                return;
+                
                 if ($job->is_admin_update) {
                     $this->exist_admin_change = true;
                 }
@@ -331,5 +334,31 @@ class JobsController extends Controller
         }
         $job->delete();
         return redirect()->back()->with('message', 'Job successfully removed');
+    }
+
+    public function isNullList ()
+    {
+        $jobs =  DB::table('jobs')
+            ->select(DB::raw('count(*) as count, title_old'))
+            ->groupBy('title_old')
+            ->get();
+
+        foreach($jobs as $job)
+        {
+            for($i=1;$i<$job->count;$i++){
+                $jb = DB::table('jobs')->where('title_old', $job->title_old)->orderBy('id', 'desc')->first();
+
+                if($jb->nucleus == 'כן') continue;
+                DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                DB::table('organization_routes_jobs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                // DB::table('job_hrs')->where('job_id', $jb->id)->delete();
+                DB::table('jobs')->where('id', $jb->id)->delete();
+            }
+        }
     }
 }

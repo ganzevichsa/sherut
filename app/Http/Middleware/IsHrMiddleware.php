@@ -18,7 +18,7 @@ class IsHrMiddleware
     {
         $this->user = auth('web')->user();
         if($this->user->role_id != Role::HR) {
-            return response()->json(['message' => 'not_found'],404);
+            return response()->json(['message' => 'you_do_not_have_permission'],404);
         }
         return $next($request);
     }

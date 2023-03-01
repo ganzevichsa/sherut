@@ -40,7 +40,8 @@ class CalculateCountOfJobPositions extends Command
     {
         $jobs = Job::all();
         foreach($jobs as $job) {
-            $job->count_of_all_positions = $job->out + $job->home + $job->dormitory;
+            // $job->count_of_all_positions = $job->out + $job->home + $job->dormitory;
+
             $job->stars = $job->reviews()->count() ? $job->reviews()->sum('stars') : 0;
             $job->save();
         }

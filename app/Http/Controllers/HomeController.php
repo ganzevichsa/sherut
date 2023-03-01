@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Excel;
+use App\Exports\JobsExport;
 
 class HomeController extends Controller
 {
@@ -138,6 +140,14 @@ class HomeController extends Controller
             "aaData" => $data
         );
         return response()->json($response);
+    }
+
+    public function downloadExcel ()
+    {
+        $export = new JobsExport();
+
+        $download = Excel::download($export, 'jobs-'.time().'.xlsx');
+        return $download;
     }
 
 }

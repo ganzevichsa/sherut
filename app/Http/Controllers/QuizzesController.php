@@ -69,7 +69,7 @@ class QuizzesController extends Controller
 
         Quiz::create([
             'question' => $request->question,
-            'answer' => json_encode($answer)
+            'answer' => json_encode($answer, JSON_UNESCAPED_SLASHES)
         ]);
 
         return redirect(route('quizzes.index'))->with('message', 'Quiz created successfully');
@@ -121,7 +121,7 @@ class QuizzesController extends Controller
             ];
         }
         
-        $quiz = Quiz::find($id)->update(['question' => $request->question, 'answer' => json_encode($answer)]);
+        $quiz = Quiz::find($id)->update(['question' => $request->question, 'answer' => json_encode($answer, JSON_UNESCAPED_UNICODE)]);
         
         return redirect(route('quizzes.index'))->with('message', 'Quiz updated successfully');
 
@@ -179,5 +179,11 @@ class QuizzesController extends Controller
         $userQuiz->value = $answer->value ? $data['value'] : null;
         $userQuiz->save();
         return response()->json(new UsersResource($user), 201);
+    }
+
+    public function destroy (Quiz $quiz)
+    {
+        $quiz->delete();
+        return redirect()->back();
     }
 }

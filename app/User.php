@@ -91,19 +91,30 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany('App\School','user_schools','user_id');
     }
 
+    public function school()
+    {
+        return $this->belongsToMany('App\School');
+    }
+
     public function cities()
     {
         return $this->belongsToMany('App\City','user_cities','user_id');
     }
 
-    public function uploadAvatar($avatar)
-    {
-        $image = $avatar;
-        $name = time() . '.' . $image->getClientOriginalExtension();
-        $destinationPath = storage_path('app/public/users/avatars');
-        $image->move($destinationPath, $name);
-        return $name;
-    }
+   public function uploadAvatar($avatar)
+   {
+       $image = $avatar;
+
+       $name = time() . '.' . $image->getClientOriginalExtension();
+       $destinationPath = storage_path('app/public/users/avatars');
+       $image->move($destinationPath, $name);
+
+       return $name;
+    //    if(isset($image->getClientOriginalExtension())){
+
+    //    }
+    //    return '';
+   }
 
     public function areas() {
         return $this->belongsToMany('App\Area','hr_areas');

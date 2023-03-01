@@ -21,12 +21,15 @@ Route::post('/login', 'Auth\Admin\LoginController@login');
 Route::post('/logout','Auth\Admin\LoginController@logout')->name('logout');
 Route::group(['middleware' => ['admin']], function() {
     Route::get('/', 'HomeController@index')->name('home');
-    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home', 'HomeController@index')->name('home.index');
     Route::get('/jobsList', 'HomeController@jobsList')->name('jobs.list');
     Route::get('/jobs/checked/{id}', 'JobsController@checked')->name('jobs.checked');
     Route::get('/jobs/files/remove/{id}', 'JobsController@removeFile')->name('store.job.files.remove');
     Route::post('/jobs/files', 'JobsController@storeFiles')->name('store.job.files');
     Route::get('/jobs/files', 'JobsController@getFiles')->name('get.job.files');
+
+    Route::get('/jobs/is-null', 'JobsController@isNullList');
+
     Route::resource('/jobs', 'JobsController');
     Route::get('/organizations/hr', 'OrganizationsController@getHr')->name('organizations.hr');
     Route::resource('/organizations', 'OrganizationsController');
@@ -68,3 +71,9 @@ Route::group(['middleware' => ['admin']], function() {
 Route::group(['prefix' => 'api', 'as' => 'api.'], function () {
     Route::get('/notification', 'NotificationController@getList');
 });
+
+Route::get('/download-excel', 'HomeController@downloadExcel');
+
+Route::get('/redis-test', 'NotificationController@redistest');
+
+    

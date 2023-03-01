@@ -34,7 +34,7 @@ class Chat implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('chat.{id}');
+        return new PrivateChannel('message');
     }
 
     public function broadcastWith()

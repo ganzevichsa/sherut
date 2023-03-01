@@ -9,6 +9,8 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
+use Twilio\Rest\Client;
+
 class HrController extends Controller
 {
     protected $user;
@@ -36,13 +38,19 @@ class HrController extends Controller
             return response()->json($validator->errors(), 400);
         }
         $data = $request->all();
+
         if ($data['phone'] != $this->user->phone) {
             $digitCode = $this->generatePIN(4);
-            $this->sendSMSNotification($this->user->phone, $digitCode);
-            $this->user->accountDigitalCode = $digitCode;
+            \Log::info($digitCode);
+            // $this->sendSMSNotification($this->user->phone, $digitCode);
+            
+            $this->user->accountDigitCode = $digitCode;
             $this->user->save();
+
             return response(['type' => 'sms', 'message' => 'success'], 200);
+            
         }
+      
         $this->_main_control_block($data);
         return new HrResource($this->user);
     }
@@ -55,10 +63,10 @@ class HrController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 400);
         }
-        if ($this->user->accountDigitalCode != $digit_code) {
+        if ($this->user->accountDigitCode != $digit_code) {
             return response()->json(['user_not_found'], 404);
         }
-        $this->user->accountDigitalCode = '';
+        $this->user->accountDigitCode = '';
         $this->user->save();
         $this->_main_control_block($data);
         return new HrResource($this->user);
@@ -66,9 +74,14 @@ class HrController extends Controller
 
     private function _main_control_block($data)
     {
-        $this->user->first_name = $data['first_name'];
-        $this->user->last_name = $data['last_name'];
-        $this->user->phone = $data['last_name'];
+        if(!empty($data['first_name'])){
+            $this->user->first_name = $data['first_name'];
+        }
+        if(!empty($data['last_name'])){
+            $this->user->last_name = $data['last_name'];
+            
+        }
+
         if (isset($data['avatar']) && !empty($data['avatar'])) {
             if ($this->user->avatar) {
                 unlink(storage_path('app/public/users/avatars/' . $this->user->avatar));
@@ -76,18 +89,28 @@ class HrController extends Controller
             $this->user->avatar = $this->user->uploadAvatar($data['avatar']);
         }
         $organization = $this->user->organization;
-        if (!$this->user->organization || $this->user->organization->name != $data['organization_name']) {
-            if (!$organization = Organization::where('name', $data['organization_name'])->first()) {
-                $organization = new Organization();
+        if(!empty($data['organization_name'])){
+            if (!$this->user->organization || $this->user->organization->name != $data['organization_name']) {
+                if (!$organization = Organization::where('name', $data['organization_name'])->first()) {
+                    $organization = new Organization();
+                }
+                $organization->name = $data['organization_name'];
+                $organization->save();
             }
-            $organization->name = $data['organization_name'];
-            $organization->save();
+            $this->user->organization_id = $organization->id;
         }
+
         $this->user->phone = $data['phone'];
-        $this->user->organization_id = $organization->id;
-        $this->user->areas()->sync($data['areas']);
-        $this->user->email = $data['email'];
-        $this->user->about = $data['about'];
+        if(!empty($data['areas'])){
+            $this->user->areas()->sync($data['areas']);
+        }
+        if(!empty($data['email'])){
+            $this->user->email = $data['email'];
+        }
+        if(!empty($data['about'])){
+            $this->user->about = $data['about'];
+        }
+        
         $this->user->save();
     }
 

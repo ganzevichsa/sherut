@@ -20,38 +20,43 @@ class BlogPostController extends Controller
 
     public function getBlogs(Request $request)
     {
+    
         $data = $request->all();
         $blogs = new Blog();
         if (isset($data['category_id'])) {
-            $blogs = $blogs->where('category_id', $data['category_id'])->get();
+            $blogs = $blogs->where('category_id', $data['category_id']);
         }
+
         if (isset($data['search'])) {
-            $blogs = $blogs->where('title', 'LIKE', '%' . $data['search'] . '%')->get();
+            
+            $blogs = $blogs->where('title', 'LIKE', '%' . $data['search'] . '%');
         }
         if ($this->user) {
             $blogs = $blogs->whereHas('roles', function ($query) {
                 $query->where('role_id', $this->user->role_id);
             });
         }
+        
+
         $blogs = $blogs->get();
-        return BlogsResourc::collection($blogs);
+        if (!empty($blogs)) {
+          return BlogsResourc::collection($blogs);
+        }else{
+            return response()->json(['message' => 'nothing was found'], 200);
+        }
+
     }
 
-    public function getPosts(Request $request, $id)
+    public function getPosts(Request $request)
     {
         $data = $request->all();
-        if ($id) {
-            if (!$post = Post::find($id)) {
-                abort(404);
-            }
-            return new PostsResource($post);
-        }
+
         $post = new Post();
         if (isset($data['category_id'])) {
-            $post = $post->where('category_id', $data['category_id'])->get();
+            $post = $post->where('category_id', $data['category_id']);
         }
         if (isset($data['search'])) {
-            $post = $post->where('title', 'LIKE', '%' . $data['search'] . '%')->get();
+            $post = $post->where('title', 'LIKE', '%' . $data['search'] . '%');
         }
         if ($this->user) {
             $post = $post->whereHas('roles', function ($query) {
@@ -62,17 +67,34 @@ class BlogPostController extends Controller
         return PostsResource::collection($posts);
     }
 
+    public function showPost($id)
+    {
+
+        if (!$post = Post::find($id)) {
+            return response()->json(['message' => 'post not found'], 404);
+        }
+
+        return new PostsResource($post);
+
+    }
+
     public function postFavorite($id)
     {
-        $post = Post::find($id);
-        if (!$post) {
-            return response()->json(['message' => 'Not found this post'], 404);
+
+        if($this->user){
+            $post = Post::find($id);
+            if (!$post) {
+                return response()->json(['message' => 'Not found this post'], 404);
+            }
+            if ($this->user->favorite_posts()->where('post_id', $id)->first()) {
+                $this->user->favorite_posts()->detach($id);
+            } else {
+                $this->user->favorite_posts()->attach($id);
+            }
+            return response()->json(['message' => true], 200);
+        }else{
+            return response()->json(['status' => 'Authorization Token not found'], 401);
         }
-        if ($this->user->favorite_posts()->where('post_id', $id)->first()) {
-            $this->user->favorite_posts()->detach($id);
-        } else {
-            $this->user->favorite_posts()->attach($id);
-        }
-        return response()->json(['message' => true], 200);
+
     }
 }

@@ -133,6 +133,7 @@
     <link rel="stylesheet" type="text/css" href="/assets/widgets/multi-upload/fileupload.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
 
     <!--[if (gte IE 8)&(lt IE 10)]>
     <script src="/assets/widgets/multi-upload/cors/jquery.xdr-transport.js"></script><![endif]-->

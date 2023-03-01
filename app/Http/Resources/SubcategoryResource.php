@@ -25,6 +25,8 @@ class SubcategoryResource extends JsonResource
             'images' => $images,
             'video_url' => $this->video_url,
             'text' => $this->text,
+            'title' => $this->title,
+
         ];
     }
 }

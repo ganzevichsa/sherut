@@ -16,7 +16,9 @@ class JobsResource extends JsonResource
      */
     public function toArray($request)
     {
+
         $user = auth('web')->user();
+
         $data = [
             'id' => $this->id,
             'title' => $this->title,
@@ -27,10 +29,14 @@ class JobsResource extends JsonResource
             'stars' => $this->reviews()->count() ? round($this->reviews()->sum('stars') / $this->reviews()->count()) : 0,
             'is_favorite' => $user->favorites()->where('job_id',$this->id)->count() ? true : false,
             'count_of_all_positions' => $this->count_of_all_positions,
-            'count_of_taken_positions' => $this->jobUsers()->where('status',UserJob::APPROVED)->count(),
+            'year' => $this->year,
+            'count_of_faqs' => $this->faqs()->count(),
+            'count_of_taken_positions' => $this->count_of_taken_positions,
             'status' => $this->status,
             'last_date_for_registration' => $this->last_date_for_registration,
-            'description' => $this->description
+            // 'description' => $this->description,
+            'description' => mb_strimwidth($this->description, 0, 200, "..."),
+            'is_requested' => auth('web')->user() ? (auth('web')->user()->opportunities()->where('job_id',$this->id)->first() ? true : false) : false,
         ];
         if($user->role_id == Role::HR) {
             $data['statuses'] = [
@@ -41,6 +47,15 @@ class JobsResource extends JsonResource
             $data['views'] = $this->views;
             $data['apply_count'] = $this->jobUsers()->where('status',UserJob::APPLY)->count();
         }
+        
+        $user_job = $this->jobUsers()->where('user_id', $user->id)->first();
+
+        if(isset($user_job)){
+            $data['status_user_job'] = $user_job['status'] == UserJob::APPLY ? 'העברה לרשימת המתנה' : ($user_job['status'] == UserJob::APPROVED ? 'התקבלה' : ($user_job['status'] == UserJob::CANCEL ? 'העברה לרשימת המתנה' : false));
+        }else{
+            $data['status_user_job'] = false;
+        }
+
         return $data;
     }
 }

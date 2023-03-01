@@ -15,4 +15,18 @@ class Organization extends Model
     {
         return $this->hasMany('App\User');
     }
+
+    public function images()
+    {
+        return $this->hasMany('App\OrganizationImage');
+    }
+
+    public function uploadImage($avatar)
+    {
+        $image = $avatar;
+        $name = time() . '.' . $image->getClientOriginalExtension();
+        $destinationPath = storage_path('app/public/organizations/images');
+        $image->move($destinationPath, $name);
+        return $name;
+    }
 }

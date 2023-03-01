@@ -36,6 +36,10 @@ class Job extends Model
         return $this->belongsTo('App\City');
     }
 
+    public function address() {
+        return $this->belongsTo('App\Address');
+    }
+
     public function type() {
         return $this->belongsTo('App\JobType','job_type_id');
     }
@@ -59,6 +63,10 @@ class Job extends Model
 
     public function reviews() {
         return $this->hasMany('App\JobReview');
+    }
+
+    public function faqs() {
+        return $this->hasMany('App\Faq');
     }
 
     public function jobUsers() {

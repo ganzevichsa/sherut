@@ -16,6 +16,7 @@ class ChatSocketResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'chat_id' => $this->chat_id,
             'user_id' => $this->user->id,
             'message' => $this->message,
             'created_at' => 'now'

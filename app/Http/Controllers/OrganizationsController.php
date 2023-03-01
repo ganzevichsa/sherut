@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Job;
 use App\Organization;
 use App\OrganizationManager;
+use App\OrganizationImage;
 use App\Traits\GlobalLines;
 use App\User;
 use Illuminate\Http\Request;
+use App\Http\Resources\OrganizationsResource;
 
 class OrganizationsController extends Controller
 {
@@ -41,6 +43,15 @@ class OrganizationsController extends Controller
             abort(404);
         }
         return view('organizations.edit',compact('organization'));
+    }
+
+    public function show($id)
+    {
+        if(!$organization = Organization::find($id)) {
+            return response()->json(['organization_not_found'], 404);
+        }
+
+        return response()->json(new OrganizationsResource($organization));
     }
 
     public function update(Request $request, $id)
@@ -84,10 +95,28 @@ class OrganizationsController extends Controller
             $organization->email = $data['email'];
         if (isset($data['website']))
             $organization->website = $data['website'];
+        if (isset($data['text']))
+            $organization->text = $data['text'];
+        if (isset($data['title']))
+            $organization->title = $data['title'];    
+        if (isset($data['video_url']))
+            $organization->title = $data['video_url'];  
         if (isset($data['logo'])) {
             $this->_uploadImageControl($data['logo'], $organization, 'logo', 'app/public/organizations/logos/');
         }
         $organization->save();
+
+        if (!empty($data['images'])) {
+
+            foreach ($data['images'] as $image) {
+                $organizationImage = new OrganizationImage();
+                $image = $organization->uploadImage($image);
+                $organizationImage->organization_id = $organization->id;
+                $organizationImage->image = $image;
+                $organizationImage->save();
+            }
+        }
+
         if ($data['managers_count'] > 0) {
             for ($i = 1; $i <= $data['managers_count']; $i++) {
                 if (!empty($data['manager_phone_' . $i])) {

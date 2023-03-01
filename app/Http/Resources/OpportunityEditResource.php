@@ -32,7 +32,7 @@ class OpportunityEditResource extends JsonResource
             'address' => $this->address ? $this->address->name : '',
             'place' => $this->home > 0 ? 'home' : ($this->out > 0 ? 'out' : ($this->dormitory > 0 ? 'dormitory' : '')),
             'nucleus' => $this->nucleus,
-            'count' => $this->home + $this->dormitory + $this->out,
+            'count_of_all_positions' => $this->count_of_all_positions,
             'how_to_sort' => $this->how_to_sort,
             'images' => $images,
             'video_url' => $this->video_url ? $this->video_url : '',
